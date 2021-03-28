@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/edit_text_activity_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/activity_name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edit_text_activity_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/activity_desc"
+            android:inputType="textMultiLine" />
+
+        <include
+            android:id="@+id/view_before_after_start"
+            layout="@layout/view_time_desc_before_after"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/view_start_hour_min_sec"
+            layout="@layout/view_hour_min_sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edit_text_activity_start_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/activity_start_notification"
+            android:inputType="textMultiLine" />
+
+        <include
+            android:id="@+id/view_before_after_end"
+            layout="@layout/view_time_desc_before_after"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/view_end_hour_min_sec"
+            layout="@layout/view_hour_min_sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edit_text_activity_end_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/activity_end_notification"
+            android:inputType="textMultiLine" />
+
+        <include
+            android:id="@+id/view_duration_below_above"
+            layout="@layout/view_time_desc_below_above"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/view_duration_hour_min_sec"
+            layout="@layout/view_hour_min_sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/view_intensity_below_above"
+                layout="@layout/view_below_above"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/edit_text_activity_intensity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/activity_target_intensity"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/view_interval_below_above"
+            layout="@layout/view_time_desc_below_above"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/view_interval_week_day_hour_min_sec"
+            layout="@layout/view_week_day_hour_min_sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

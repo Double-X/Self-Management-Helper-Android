@@ -1,0 +1,85 @@
+<!DOCTYPE resources [
+
+    <!ENTITY actual "实际">
+    <!ENTITY targeted "目标">
+
+    <!ENTITY cancel "取消">
+    <!ENTITY clear "清除">
+    <!ENTITY confirm "确定">
+
+    <!ENTITY end "完结">
+    <!ENTITY start "开始">
+
+    <!ENTITY hide "隐藏">
+    <!ENTITY show "显示">
+
+    <!ENTITY all_data "所有资料">
+    <!ENTITY define_new "定义新的">
+    <!ENTITY defined "已定义的">
+    <!ENTITY delete "删除">
+    <!ENTITY duration "持续时间">
+    <!ENTITY intensity "强度">
+    <!ENTITY interval "间隔">
+    <!ENTITY notification "通知">
+    <!ENTITY scheduled "已编排的">
+    <!ENTITY time "时间">
+
+    <!ENTITY activities "活动">
+    <!ENTITY activity "活动">
+    <!ENTITY activity_logs "活动记录">
+
+    ]>
+
+<resources>
+
+    <string name="app_name">自我管理助手</string>
+
+    <string name="lang_cn">简</string>
+    <string name="lang_zh">繁</string>
+    <string name="lang_en">EN</string>
+
+    <string name="clear_all_data">&clear;&all_data;</string>
+
+    <string name="cancel">&cancel;</string>
+    <string name="clear">&clear;</string>
+    <string name="confirm">&confirm;</string>
+    <string name="define_activity">&define_new;&activity;</string>
+    <string name="hide_activities">&hide;&defined;&activities;</string>
+    <string name="show_activities">&show;&defined;&activities;</string>
+    <string name="hide_activity_logs">&hide;&activity_logs;</string>
+    <string name="show_activity_logs">&show;&activity_logs;</string>
+
+    <string name="activity_desc">&activity;描述</string>
+    <string name="activity_name">&activity;名称</string>
+    <string name="activity_end_notification">&activity;&end;时的&notification;</string>
+    <string name="activity_start_notification">&activity;&start;时的&notification;</string>
+    <string name="activity_target_duration">&targeted;&activity;&duration;</string>
+    <string name="activity_target_end_time">&targeted;&activity;&end;&time;</string>
+    <string name="activity_target_start_time">&targeted;&activity;&start;&time;</string>
+    <string name="activity_target_intensity">&targeted;&activity;&intensity;</string>
+    <string name="activity_target_interval">&targeted;&activity;&interval;</string>
+
+    <string name="delete">&delete;</string>
+    <string name="save">储存</string>
+    <string name="save_as">另存为</string>
+
+    <string name="on_clear_all_data">&confirm;&clear;&all_data;？</string>
+    <string name="on_delete_activity">&confirm;&delete;&activity;「%1$s」？</string>
+    <string name="on_empty_edit_text">%1$s不能为空！</string>
+
+    <string name="days">天</string>
+    <string name="hours">小时</string>
+    <string name="minutes">分钟</string>
+    <string name="secs">秒</string>
+    <string name="weeks">星期</string>
+
+    <string name="above">多於</string>
+    <string name="below">少於</string>
+
+    <string name="after">之後</string>
+    <string name="before">之前</string>
+
+    <string name="end">&end;</string>
+    <string name="start">&start;</string>
+
+</resources>
