@@ -7,6 +7,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
+import com.doublex.selfmanagementhelper.views.ActivityLogs
 import com.doublex.selfmanagementhelper.views.DefinedActivityViews
 import com.doublex.selfmanagementhelper.views.NewActivityView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,7 +17,6 @@ import java.util.*
 
 internal class MainActivity : AppCompatActivity() {
 
-    private val _activityLogs by lazy { recycler_activity_logs }
     private val _newActivityView by lazy { NewActivityView(this, linear_define_activity) }
     private val _res by lazy { resources }
     private val _config by lazy { _res.configuration }
@@ -27,14 +27,24 @@ internal class MainActivity : AppCompatActivity() {
         override fun onDelete(name: String) {
             _definedActivityViews.delete(name, this@MainActivity, this)
         }
+        override fun onRename(newName: String, details: JSONObject, oldName: String) {
+            _definedActivityViews.rename(newName, details, oldName)
+        }
         override fun onSave(name: String, details: JSONObject) {
-            _definedActivityViews.save(name, details, this@MainActivity, this)
+            _definedActivityViews.save(name, details)
+        }
+        override fun onSaveAs(name: String, details: JSONObject) {
+            _definedActivityViews.saveAs(name, details, this@MainActivity, this)
         }
         override fun onStart(name: String, details: JSONObject, notification: String) {
+            _activityLogs.start(this@MainActivity, name, details)
             _notification.show(notification)
         }
     }
     private val _notification by lazy { NotificationBuilder(this) }
+    private val _activityLogs by lazy {
+        ActivityLogs(_cache, _notification, linear_activity_logs)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +114,7 @@ internal class MainActivity : AppCompatActivity() {
         toggleActivityLogVisibilities()
         //
         _definedActivityViews.update(this, _definedActivityCallbacks)
+        _activityLogs.update(this)
     }
 
     @UiThread
@@ -118,7 +129,7 @@ internal class MainActivity : AppCompatActivity() {
 
     @UiThread
     private fun onClearAllData() {
-        showConfirmDialog(this, _res.getString(R.string.on_clear_all_data)) { clearAllData() }
+        showConfirmDialog(this, R.string.on_clear_all_data) { clearAllData() }
     }
     @UiThread
     private fun clearAllData() {
@@ -165,7 +176,7 @@ internal class MainActivity : AppCompatActivity() {
 
     @UiThread
     private fun toggleActivityLogVisibilities() {
-        when (recycler_activity_logs.visibility) {
+        when (linear_activity_logs.visibility) {
             View.GONE -> showActivityLogs()
             View.VISIBLE -> hideActivityLogs()
         }
@@ -173,12 +184,12 @@ internal class MainActivity : AppCompatActivity() {
     @UiThread
     private fun showActivityLogs() {
         button_activity_logs.setText(R.string.hide_activity_logs)
-        recycler_activity_logs.visibility = View.VISIBLE
+        linear_activity_logs.visibility = View.VISIBLE
     }
     @UiThread
     private fun hideActivityLogs() {
         button_activity_logs.setText(R.string.show_activity_logs)
-        recycler_activity_logs.visibility = View.GONE
+        linear_activity_logs.visibility = View.GONE
     }
 
     @UiThread

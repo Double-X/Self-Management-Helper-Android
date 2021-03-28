@@ -14,8 +14,9 @@ internal class NotificationBuilder(private val _context: Context) {
 
     private val _channelId = BuildConfig.APPLICATION_ID
     private val _appName = _context.resources.getString(R.string.app_name)
-    private val _manager =
-        _context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val _manager = _context.getSystemService(
+        Context.NOTIFICATION_SERVICE
+    ) as NotificationManager
     private val _sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
     @UiThread
@@ -40,8 +41,11 @@ internal class NotificationBuilder(private val _context: Context) {
         val audioAttributes = AudioAttributes.Builder()
         audioAttributes.setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
         audioAttributes.setUsage(AudioAttributes.USAGE_ALARM)
-        val notificationChannel =
-            NotificationChannel(_channelId, _appName, NotificationManager.IMPORTANCE_HIGH)
+        val notificationChannel = NotificationChannel(
+            _channelId,
+            _appName,
+            NotificationManager.IMPORTANCE_HIGH
+        )
         notificationChannel.setSound(_sound, audioAttributes.build())
         _manager.createNotificationChannel(notificationChannel)
     }

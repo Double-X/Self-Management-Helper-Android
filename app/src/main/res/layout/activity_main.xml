@@ -130,10 +130,11 @@
                 android:gravity="center"
                 android:text="@string/show_activity_logs" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_activity_logs"
+            <LinearLayout
+                android:id="@+id/linear_activity_logs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:visibility="gone" />
 
         </LinearLayout>

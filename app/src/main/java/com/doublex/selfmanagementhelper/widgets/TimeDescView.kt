@@ -1,4 +1,4 @@
-package com.doublex.selfmanagementhelper.views
+package com.doublex.selfmanagementhelper.widgets
 
 import android.view.View
 import android.widget.TextView
@@ -27,7 +27,7 @@ internal class TimeDescView(view: View, private val _timeDesc: Int, viewClass: V
         setDesc()
     }
     @UiThread
-    fun flag(): String = _beforeBelowAboveAfterView.flag()
+    fun flag() = _beforeBelowAboveAfterView.flag()
 
     @UiThread
     private fun setDesc() = _textTimeDesc.setText(_timeDesc)

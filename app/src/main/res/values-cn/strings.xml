@@ -58,13 +58,16 @@
     <string name="activity_target_start_time">&targeted;&activity;&start;&time;</string>
     <string name="activity_target_intensity">&targeted;&activity;&intensity;</string>
     <string name="activity_target_interval">&targeted;&activity;&interval;</string>
+    <string name="activity_actual_intensity">&actual;&activity;&intensity;</string>
 
     <string name="delete">&delete;</string>
+    <string name="rename">重命名</string>
     <string name="save">储存</string>
     <string name="save_as">另存为</string>
 
     <string name="on_clear_all_data">&confirm;&clear;&all_data;？</string>
     <string name="on_delete_activity">&confirm;&delete;&activity;「%1$s」？</string>
+    <string name="on_delete_activity_log">&confirm;&delete;&activity_logs;「%1$s」？</string>
     <string name="on_empty_edit_text">%1$s不能为空！</string>
 
     <string name="days">天</string>
@@ -76,8 +79,8 @@
     <string name="above">多於</string>
     <string name="below">少於</string>
 
-    <string name="after">之後</string>
-    <string name="before">之前</string>
+    <string name="after">後於</string>
+    <string name="before">先於</string>
 
     <string name="end">&end;</string>
     <string name="start">&start;</string>

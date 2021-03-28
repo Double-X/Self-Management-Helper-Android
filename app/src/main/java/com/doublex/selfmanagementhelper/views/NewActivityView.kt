@@ -5,11 +5,15 @@ import android.view.View
 import android.widget.EditText
 import androidx.annotation.UiThread
 import com.doublex.selfmanagementhelper.R
+import com.doublex.selfmanagementhelper.widgets.BelowAboveView
+import com.doublex.selfmanagementhelper.widgets.HourMinSecView
+import com.doublex.selfmanagementhelper.widgets.TimeDescView
+import com.doublex.selfmanagementhelper.widgets.WeekDayHourMinSecView
 import org.json.JSONObject
 
 internal class NewActivityView(context: Context, private val _view: View) {
 
-    private companion object {
+    companion object {
         const val DESC = "Desc"
         const val TARGETED_START_TIME = "Targeted Start Time"
         const val START_TIME_FLAG = "Start Time Flag"
@@ -71,9 +75,7 @@ internal class NewActivityView(context: Context, private val _view: View) {
         details: JSONObject
     ): this(context, view) {
         setName(name)
-        setEditTexts(details)
-        setRadioButtons(details)
-        setTimes(details)
+        setDetails(details)
     }
 
     @UiThread
@@ -90,7 +92,7 @@ internal class NewActivityView(context: Context, private val _view: View) {
     }
 
     @UiThread
-    fun name(): String = viewString(_editTextName)
+    fun name() = viewString(_editTextName)
     @UiThread
     fun details(): JSONObject {
         val jsonObject = JSONObject()
@@ -110,15 +112,21 @@ internal class NewActivityView(context: Context, private val _view: View) {
         return jsonObject
     }
     @UiThread
-    fun startNotification(): String = viewString(_editTextStart)
+    fun startNotification() = viewString(_editTextStart)
     @UiThread
-    fun endNotification(): String = viewString(_editTextEnd)
-
+    fun endNotification() = viewString(_editTextEnd)
     @UiThread
-    private fun setName(name: String) {
+    fun setName(name: String) {
         _editTextName.isEnabled = false
         _editTextName.setText(name)
     }
+    @UiThread
+    fun setDetails(details: JSONObject) {
+        setEditTexts(details)
+        setRadioButtons(details)
+        setTimes(details)
+    }
+
     @UiThread
     private fun setEditTexts(details: JSONObject) {
         _editTextDesc.setText(details.getString(DESC))
@@ -197,6 +205,6 @@ internal class NewActivityView(context: Context, private val _view: View) {
     @UiThread
     private fun <T: View>view(id: Int): T = _view.findViewById(id)
     @UiThread
-    private fun viewString(editText: EditText): String = editText.text.toString()
+    private fun viewString(editText: EditText) = editText.text.toString()
 
 }

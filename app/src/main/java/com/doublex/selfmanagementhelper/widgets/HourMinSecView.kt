@@ -1,4 +1,4 @@
-package com.doublex.selfmanagementhelper.views
+package com.doublex.selfmanagementhelper.widgets
 
 import android.content.Context
 import android.view.View
@@ -62,12 +62,12 @@ internal open class HourMinSecView(private val _context: Context, private val _v
     @UiThread
     protected fun clearSpinner(spinner: Spinner) { spinner.isSelected = false }
     @UiThread
-    protected fun time(spinner: Spinner): String = spinner.selectedItem?.toString() ?: ""
+    protected fun time(spinner: Spinner) = spinner.selectedItem?.toString() ?: ""
     @UiThread
     protected fun spinner(id: Int, objectsR: Int): Spinner {
         val spinner = view<Spinner>(id)
         val res = R.layout.support_simple_spinner_dropdown_item
-        spinner.adapter = ArrayAdapter(_context, res, _res.getIntArray(objectsR).toList())
+        spinner.adapter = ArrayAdapter(_context, res, _res.getStringArray(objectsR).toList())
         return spinner
     }
     @UiThread

@@ -31,14 +31,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
-                android:text="@string/below" />
+                android:text="@string/before" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_after"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
-                android:text="@string/above" />
+                android:text="@string/after" />
         </com.google.android.material.chip.ChipGroup>
 
     </LinearLayout>

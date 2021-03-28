@@ -11,9 +11,11 @@ internal class DefinedActivityViews(private val _cache: Cache, private val _view
 
     @UiThread
     fun add(newActivityView: NewActivityView, context: Context, callbacks: DefinedActivity) {
-        _cache.saveActivity(newActivityView.name(), newActivityView.details())
+        val activityName = newActivityView.name()
+        val activityDetails = newActivityView.details()
+        _cache.saveActivity(activityName, activityDetails)
+        add(activityName, activityDetails, context, callbacks)
         newActivityView.clear()
-        update(context, callbacks)
     }
     @UiThread
     fun delete(activityName: String, context: Context, callbacks: DefinedActivity) {
@@ -21,14 +23,22 @@ internal class DefinedActivityViews(private val _cache: Cache, private val _view
         update(context, callbacks)
     }
     @UiThread
-    fun save(
+    fun rename(newActivityName: String, activityDetails: JSONObject, oldActivityName: String) {
+        _cache.renameActivity(newActivityName, activityDetails, oldActivityName)
+    }
+    @UiThread
+    fun saveAs(
         activityName: String,
         activityDetails: JSONObject,
         context: Context,
         callbacks: DefinedActivity
     ) {
+        save(activityName, activityDetails)
+        add(activityName, activityDetails, context, callbacks)
+    }
+    @UiThread
+    fun save(activityName: String, activityDetails: JSONObject) {
         _cache.saveActivity(activityName, activityDetails)
-        update(context, callbacks)
     }
     @UiThread
     fun update(context: Context, callbacks: DefinedActivity) {

@@ -18,15 +18,17 @@ internal class Cache(private val _sharedPreferences: SharedPreferences) {
         val EMPTY_JSON_OBJECT = JSONObject().toString()
     }
 
-    private val _editor: SharedPreferences.Editor = _sharedPreferences.edit()
+    private val _editor = _sharedPreferences.edit()
 
     fun clearAll() {
         _editor.clear()
         _editor.commit()
     }
 
-    fun activities(): JSONObject {
-        return JSONObject(_sharedPreferences.getString(ACTIVITIES, EMPTY_JSON_OBJECT)!!)
+    fun activities() = JSONObject(_sharedPreferences.getString(ACTIVITIES, EMPTY_JSON_OBJECT)!!)
+    fun renameActivity(newName: String, details: JSONObject, oldName: String) {
+        saveActivity(newName, details)
+        deleteActivity(oldName)
     }
     fun deleteActivity(name: String) {
         val activities = activities()
@@ -41,17 +43,20 @@ internal class Cache(private val _sharedPreferences: SharedPreferences) {
         _editor.commit()
     }
 
-    fun activityLogs(activityName: String): JSONObject {
-        val logs = allActivityLogs()
-        return if (logs.has(activityName)) logs.getJSONObject(activityName) else JSONObject()
-    }
-    fun allActivityLogs(): JSONObject {
+    fun activityLogs(): JSONObject {
         return JSONObject(_sharedPreferences.getString(ACTIVITY_LOGS, EMPTY_JSON_OBJECT)!!)
     }
-    fun saveActivityLog(activityName: String, logCreationTime: Int, logDetails: JSONObject) {
-        val logs = allActivityLogs()
+    fun deleteActivityLog(activityName: String, startTime: Long) {
+        val logs = activityLogs()
+        if (!logs.has(activityName)) return
+        logs.getJSONObject(activityName).remove(startTime.toString())
+        _editor.putString(ACTIVITY_LOGS, logs.toString())
+        _editor.commit()
+    }
+    fun saveActivityLog(activityName: String, startTime: Long, logDetails: JSONObject) {
+        val logs = activityLogs()
         if (!logs.has(activityName)) logs.put(activityName, JSONObject())
-        logs.getJSONObject(activityName).put(logCreationTime.toString(), logDetails)
+        logs.getJSONObject(activityName).put(startTime.toString(), logDetails)
         _editor.putString(ACTIVITY_LOGS, logs.toString())
         _editor.commit()
     }
