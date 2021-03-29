@@ -14,56 +14,60 @@ import org.json.JSONObject
 internal class NewActivityView(context: Context, private val _view: View) {
 
     companion object {
+
         const val DESC = "Desc"
+
         const val TARGETED_START_TIME = "Targeted Start Time"
         const val START_TIME_FLAG = "Start Time Flag"
         const val START_NOTIFICATION = "Start Notification"
+
         const val TARGETED_END_TIME = "Targeted End Time"
         const val END_TIME_FLAG = "End Time Flag"
         const val END_NOTIFICATION = "End Notification"
+
         const val TARGETED_DURATION = "Targeted Duration"
         const val DURATION_FLAG = "Duration Flag"
+
         const val TARGETED_INTENSITY = "Targeted Intensity"
         const val INTENSITY_FLAG = "Intensity Flag"
+
         const val TARGETED_INTERVAL = "Targeted Interval"
         const val INTERVAL_FLAG = "Interval Flag"
+
     }
 
-    private val _editTextName = editText(R.id.edit_text_activity_name)
-    private val _editTextDesc = editText(R.id.edit_text_activity_desc)
-    private val _editTextStart = editText(R.id.edit_text_activity_start_notification)
-    private val _editTextEnd = editText(R.id.edit_text_activity_end_notification)
-    private val _editTextIntensity = editText(R.id.edit_text_activity_intensity)
+    private val _name = editText(R.id.edit_text_activity_name)
+    private val _desc = editText(R.id.edit_text_activity_desc)
+    private val _start = editText(R.id.edit_text_activity_start_notification)
+    private val _end = editText(R.id.edit_text_activity_end_notification)
+    private val _intensity = editText(R.id.edit_text_activity_intensity)
 
-    private val _startBeforeAfterView = TimeDescView(
+    private val _startBeforeAfter = TimeDescView(
         view(R.id.view_before_after_start),
         R.string.activity_target_start_time,
         TimeDescView.ViewClass.BeforeAfter
     )
-    private val _endBeforeAfterView = TimeDescView(
+    private val _endBeforeAfter = TimeDescView(
         view(R.id.view_before_after_end),
         R.string.activity_target_end_time,
         TimeDescView.ViewClass.BeforeAfter
     )
-    private val _durationAboveBelowView = TimeDescView(
+    private val _durationAboveBelow = TimeDescView(
         view(R.id.view_duration_below_above),
         R.string.activity_target_duration,
         TimeDescView.ViewClass.BelowAbove
     )
-    private val _intensityAboveBelowView = BelowAboveView(view(R.id.view_intensity_below_above))
-    private val _intervalAboveBelowView = TimeDescView(
+    private val _intensityAboveBelow = BelowAboveView(view(R.id.view_intensity_below_above))
+    private val _intervalAboveBelow = TimeDescView(
         view(R.id.view_interval_below_above),
         R.string.activity_target_interval,
         TimeDescView.ViewClass.BelowAbove
     )
 
-    private val _startHourMinSecView = HourMinSecView(context, view(R.id.view_start_hour_min_sec))
-    private val _endHourMinSecView = HourMinSecView(context, view(R.id.view_end_hour_min_sec))
-    private val _durationHourMinSecView = HourMinSecView(
-        context,
-        view(R.id.view_duration_hour_min_sec)
-    )
-    private val _intervalWeekDayHourMinSecView = WeekDayHourMinSecView(
+    private val _startHourMinSec = HourMinSecView(context, view(R.id.view_start_hour_min_sec))
+    private val _endHourMinSec = HourMinSecView(context, view(R.id.view_end_hour_min_sec))
+    private val _durationHourMinSec = HourMinSecView(context, view(R.id.view_duration_hour_min_sec))
+    private val _intervalWeekDayHourMinSec = WeekDayHourMinSecView(
         context,
         view(R.id.view_interval_week_day_hour_min_sec)
     )
@@ -90,35 +94,10 @@ internal class NewActivityView(context: Context, private val _view: View) {
         redrawRadioButtonTexts()
         redrawTimes()
     }
-
-    @UiThread
-    fun name() = viewString(_editTextName)
-    @UiThread
-    fun details(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put(DESC, viewString(_editTextDesc))
-        jsonObject.put(TARGETED_START_TIME, _startHourMinSecView.times())
-        jsonObject.put(START_TIME_FLAG, _startBeforeAfterView.flag())
-        jsonObject.put(START_NOTIFICATION, startNotification())
-        jsonObject.put(TARGETED_END_TIME, _endHourMinSecView.times())
-        jsonObject.put(END_TIME_FLAG, _endBeforeAfterView.flag())
-        jsonObject.put(END_NOTIFICATION, endNotification())
-        jsonObject.put(TARGETED_DURATION, _durationHourMinSecView.times())
-        jsonObject.put(DURATION_FLAG, _durationAboveBelowView.flag())
-        jsonObject.put(TARGETED_INTENSITY, viewString(_editTextIntensity))
-        jsonObject.put(INTENSITY_FLAG, _intensityAboveBelowView.flag())
-        jsonObject.put(TARGETED_INTERVAL, _intervalWeekDayHourMinSecView.times())
-        jsonObject.put(INTERVAL_FLAG, _intervalAboveBelowView.flag())
-        return jsonObject
-    }
-    @UiThread
-    fun startNotification() = viewString(_editTextStart)
-    @UiThread
-    fun endNotification() = viewString(_editTextEnd)
     @UiThread
     fun setName(name: String) {
-        _editTextName.isEnabled = false
-        _editTextName.setText(name)
+        _name.isEnabled = false
+        _name.setText(name)
     }
     @UiThread
     fun setDetails(details: JSONObject) {
@@ -128,76 +107,128 @@ internal class NewActivityView(context: Context, private val _view: View) {
     }
 
     @UiThread
-    private fun setEditTexts(details: JSONObject) {
-        _editTextDesc.setText(details.getString(DESC))
-        _editTextStart.setText(details.getString(START_NOTIFICATION))
-        _editTextEnd.setText(details.getString(END_NOTIFICATION))
-        _editTextIntensity.setText(details.getString(TARGETED_INTENSITY))
+    fun name() = viewString(_name)
+    @UiThread
+    fun details(): JSONObject {
+        val details = JSONObject()
+        putJSONObjects(details)
+        putStrings(details)
+        return details
     }
     @UiThread
-    private fun setRadioButtons(details: JSONObject) {
-        _startBeforeAfterView.set(details.getString(START_TIME_FLAG))
-        _endBeforeAfterView.set(details.getString(END_TIME_FLAG))
-        _durationAboveBelowView.set(details.getString(DURATION_FLAG))
-        _intensityAboveBelowView.set(details.getString(INTENSITY_FLAG))
-        _intervalAboveBelowView.set(details.getString(INTERVAL_FLAG))
-    }
+    fun startNotification() = viewString(_start)
     @UiThread
-    fun setTimes(details: JSONObject) {
-        _startHourMinSecView.set(details.getJSONObject(TARGETED_START_TIME))
-        _endHourMinSecView.set(details.getJSONObject(TARGETED_END_TIME))
-        _durationHourMinSecView.set(details.getJSONObject(TARGETED_DURATION))
-        _intervalWeekDayHourMinSecView.set(details.getJSONObject(TARGETED_INTERVAL))
-    }
+    fun endNotification() = viewString(_end)
 
     @UiThread
     private fun clearEditTexts() {
-        clearEditText(_editTextName)
-        clearEditText(_editTextDesc)
-        clearEditText(_editTextStart)
-        clearEditText(_editTextEnd)
-        clearEditText(_editTextIntensity)
+        clearEditText(_name)
+        clearEditText(_desc)
+        clearEditText(_start)
+        clearEditText(_end)
+        clearEditText(_intensity)
     }
     @UiThread
     private fun clearEditText(editText: EditText) = editText.setText("")
     @UiThread
     private fun clearRadioButtons() {
-        _startBeforeAfterView.clear()
-        _endBeforeAfterView.clear()
-        _durationAboveBelowView.clear()
-        _intensityAboveBelowView.clear()
-        _intervalAboveBelowView.clear()
+        _startBeforeAfter.clear()
+        _endBeforeAfter.clear()
+        _durationAboveBelow.clear()
+        _intensityAboveBelow.clear()
+        _intervalAboveBelow.clear()
     }
     @UiThread
     fun clearTimes() {
-        _startHourMinSecView.clear()
-        _endHourMinSecView.clear()
-        _durationHourMinSecView.clear()
-        _intervalWeekDayHourMinSecView.clear()
+        _startHourMinSec.clear()
+        _endHourMinSec.clear()
+        _durationHourMinSec.clear()
+        _intervalWeekDayHourMinSec.clear()
     }
 
     @UiThread
     private fun redrawEditTextHints() {
-        _editTextName.setHint(R.string.activity_name)
-        _editTextDesc.setHint(R.string.activity_desc)
-        _editTextStart.setHint(R.string.activity_start_notification)
-        _editTextEnd.setHint(R.string.activity_end_notification)
-        _editTextIntensity.setHint(R.string.activity_target_intensity)
+        _name.setHint(R.string.activity_name)
+        _desc.setHint(R.string.activity_desc)
+        _start.setHint(R.string.activity_start_notification)
+        _end.setHint(R.string.activity_end_notification)
+        _intensity.setHint(R.string.activity_target_intensity)
     }
     @UiThread
     private fun redrawRadioButtonTexts() {
-        _startBeforeAfterView.redrawTexts()
-        _endBeforeAfterView.redrawTexts()
-        _durationAboveBelowView.redrawTexts()
-        _intensityAboveBelowView.redrawTexts()
-        _intervalAboveBelowView.redrawTexts()
+        _startBeforeAfter.redrawTexts()
+        _endBeforeAfter.redrawTexts()
+        _durationAboveBelow.redrawTexts()
+        _intensityAboveBelow.redrawTexts()
+        _intervalAboveBelow.redrawTexts()
     }
     @UiThread
     private fun redrawTimes() {
-        _startHourMinSecView.redrawTexts()
-        _endHourMinSecView.redrawTexts()
-        _durationHourMinSecView.redrawTexts()
-        _intervalWeekDayHourMinSecView.redrawTexts()
+        _startHourMinSec.redrawTexts()
+        _endHourMinSec.redrawTexts()
+        _durationHourMinSec.redrawTexts()
+        _intervalWeekDayHourMinSec.redrawTexts()
+    }
+
+    @UiThread
+    private fun setEditTexts(details: JSONObject) {
+        _desc.setText(string(details, DESC))
+        _start.setText(string(details, START_NOTIFICATION))
+        _end.setText(string(details, END_NOTIFICATION))
+        _intensity.setText(string(details, TARGETED_INTENSITY))
+    }
+    @UiThread
+    private fun setRadioButtons(details: JSONObject) {
+        _startBeforeAfter.set(string(details, START_TIME_FLAG))
+        _endBeforeAfter.set(string(details, END_TIME_FLAG))
+        _durationAboveBelow.set(string(details, DURATION_FLAG))
+        _intensityAboveBelow.set(string(details, INTENSITY_FLAG))
+        _intervalAboveBelow.set(string(details, INTERVAL_FLAG))
+    }
+    private fun string(details: JSONObject, key: String): String {
+        return if (details.has(key)) details.getString(key) else ""
+    }
+    @UiThread
+    private fun setTimes(details: JSONObject) {
+        _startHourMinSec.set(jsonObject(details, TARGETED_START_TIME))
+        _endHourMinSec.set(jsonObject(details, TARGETED_END_TIME))
+        _durationHourMinSec.set(jsonObject(details, TARGETED_DURATION))
+        _intervalWeekDayHourMinSec.set(jsonObject(details, TARGETED_INTERVAL))
+    }
+    private fun jsonObject(details: JSONObject, key: String): JSONObject {
+        // Avoid null checks at the cost of making throwaway objects
+        return if (details.has(key)) details.getJSONObject(key) else JSONObject()
+        //
+    }
+
+    @UiThread
+    private fun putJSONObjects(details: JSONObject) {
+        putJSONObject(details, TARGETED_START_TIME, _startHourMinSec.times())
+        putJSONObject(details, TARGETED_END_TIME, _endHourMinSec.times())
+        putJSONObject(details, TARGETED_DURATION, _durationHourMinSec.times())
+        putJSONObject(details, TARGETED_INTERVAL, _intervalWeekDayHourMinSec.times())
+    }
+    @UiThread
+    private fun putJSONObject(details: JSONObject, key: String, jsonObject: JSONObject) {
+        // Minimizes the size of the data stored
+        if (jsonObject.length() > 0) details.put(key, jsonObject)
+        //
+    }
+    @UiThread
+    private fun putStrings(details: JSONObject) {
+        putString(DESC, details, viewString(_desc))
+        putString(START_TIME_FLAG, details, _startBeforeAfter.flag())
+        putString(START_NOTIFICATION, details, startNotification())
+        putString(END_TIME_FLAG, details, _endBeforeAfter.flag())
+        putString(END_NOTIFICATION, details, endNotification())
+        putString(DURATION_FLAG, details, _durationAboveBelow.flag())
+        putString(TARGETED_INTENSITY, details, viewString(_intensity))
+        putString(INTENSITY_FLAG, details, _intensityAboveBelow.flag())
+        putString(INTERVAL_FLAG, details, _intervalAboveBelow.flag())
+    }
+    @UiThread
+    private fun putString(key: String, details: JSONObject, string: String) {
+        if (string.isNotEmpty()) details.put(key, string) // Minimizes the size of the data stored
     }
 
     @UiThread

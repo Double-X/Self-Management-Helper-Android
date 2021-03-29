@@ -22,16 +22,11 @@ internal open class HourMinSecView(private val _context: Context, private val _v
     private val _spinnerHours = spinner(R.id.spinner_hours, R.array.spinner_0_23)
     private val _spinnerMinutes = spinner(R.id.spinner_minutes, R.array.spinner_0_59)
     private val _spinnerSecs = spinner(R.id.spinner_secs, R.array.spinner_0_59)
+
     private val _textHours = textView(R.id.text_hours)
     private val _textMinutes = textView(R.id.text_minutes)
     private val _textSecs = textView(R.id.text_secs)
 
-    @UiThread
-    open fun set(time: JSONObject) {
-        setSpinner(_spinnerHours, time.getString(HOURS))
-        setSpinner(_spinnerMinutes, time.getString(MINUTES))
-        setSpinner(_spinnerSecs, time.getString(SECS))
-    }
     @UiThread
     open fun clear() {
         clearSpinner(_spinnerHours)
@@ -45,12 +40,19 @@ internal open class HourMinSecView(private val _context: Context, private val _v
         _textSecs.setText(R.string.secs)
     }
     @UiThread
+    open fun set(times: JSONObject) {
+        setSpinner(_spinnerHours, time(times, HOURS))
+        setSpinner(_spinnerMinutes, time(times, MINUTES))
+        setSpinner(_spinnerSecs, time(times, SECS))
+    }
+
+    @UiThread
     open fun times(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put(HOURS, time(_spinnerHours))
-        jsonObject.put(MINUTES, time(_spinnerMinutes))
-        jsonObject.put(SECS, time(_spinnerSecs))
-        return jsonObject
+        val times = JSONObject()
+        putString(times, HOURS, _spinnerHours)
+        putString(times, MINUTES, _spinnerMinutes)
+        putString(times, SECS, _spinnerSecs)
+        return times
     }
 
     @UiThread
@@ -60,7 +62,20 @@ internal open class HourMinSecView(private val _context: Context, private val _v
         //
     }
     @UiThread
-    protected fun clearSpinner(spinner: Spinner) { spinner.isSelected = false }
+    protected fun clearSpinner(spinner: Spinner) {
+        spinner.setSelection(0)
+        spinner.isSelected = false
+    }
+    @UiThread
+    protected fun putString(times: JSONObject, key: String, spinner: Spinner) {
+        val time = time(spinner)
+        if (time.isNotEmpty()) times.put(key, time) // Minimizes the size of the data stored
+    }
+
+    @UiThread
+    protected fun time(times: JSONObject, key: String): String {
+        return if (times.has(key)) times.getString(key) else ""
+    }
     @UiThread
     protected fun time(spinner: Spinner) = spinner.selectedItem?.toString() ?: ""
     @UiThread

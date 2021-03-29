@@ -9,31 +9,34 @@ internal abstract class BeforeBelowAboveAfterView(private val _view: View) {
 
     private enum class Flag(val flag: String) {
         AFTER_ABOVE("After Above"),
-        BEFORE_BELOW("Before Below"),
-        NONE("None")
+        BEFORE_BELOW("Before Below")
     }
 
-    private val _afterAboveChip by lazy { chip(afterAboveId()) }
-    private val _beforeBelowChip by lazy { chip(beforeBelowId()) }
-    private val _chipGroup by lazy { _view.findViewById(afterAboveBeforeBelowId()) as ChipGroup }
+    private val _afterAbove by lazy { chip(afterAboveId()) }
+    private val _beforeBelow by lazy { chip(beforeBelowId()) }
+    private val _afterAboveBeforeBelow by lazy {
+        _view.findViewById(afterAboveBeforeBelowId()) as ChipGroup
+    }
 
     @UiThread
-    fun set(flag: String) {
-        setChip(_afterAboveChip, flag, Flag.AFTER_ABOVE)
-        setChip(_beforeBelowChip, flag, Flag.BEFORE_BELOW)
-    }
-    @UiThread
-    fun clear() = _chipGroup.clearCheck()
+    fun clear() = _afterAboveBeforeBelow.clearCheck()
     @UiThread
     fun redrawTexts() {
-        _afterAboveChip.setText(afterAboveStringR())
-        _beforeBelowChip.setText(beforeBelowStringR())
+        _afterAbove.setText(afterAboveStringR())
+        _beforeBelow.setText(beforeBelowStringR())
+    }
+    @UiThread
+    fun set(flag: String) {
+        setChip(_afterAbove, flag, Flag.AFTER_ABOVE)
+        setChip(_beforeBelow, flag, Flag.BEFORE_BELOW)
     }
 
     @UiThread
     fun flag(): String {
-        if (_afterAboveChip.isChecked) return Flag.AFTER_ABOVE.flag
-        return if (_beforeBelowChip.isChecked) Flag.BEFORE_BELOW.flag else Flag.NONE.flag
+        if (_afterAbove.isChecked) return Flag.AFTER_ABOVE.flag
+        // Minimizes the size of the data stored
+        return if (_beforeBelow.isChecked) Flag.BEFORE_BELOW.flag else ""
+        //
     }
 
     protected abstract fun afterAboveId(): Int
@@ -44,6 +47,7 @@ internal abstract class BeforeBelowAboveAfterView(private val _view: View) {
 
     @UiThread
     private fun chip(id: Int): Chip = _view.findViewById(id)
+
     @UiThread
     private fun setChip(chip: Chip, flagString: String, flagEnum: Flag) {
         chip.isChecked = flagString == flagEnum.flag

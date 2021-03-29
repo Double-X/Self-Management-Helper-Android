@@ -9,7 +9,7 @@ internal class TimeDescView(view: View, private val _timeDesc: Int, viewClass: V
 
     enum class ViewClass { BeforeAfter, BelowAbove }
 
-    private val _beforeBelowAboveAfterView: BeforeBelowAboveAfterView = when (viewClass) {
+    private val _beforeBelowAboveAfter: BeforeBelowAboveAfterView = when (viewClass) {
         ViewClass.BeforeAfter -> BeforeAfterView(view)
         ViewClass.BelowAbove -> BelowAboveView(view)
     }
@@ -18,16 +18,17 @@ internal class TimeDescView(view: View, private val _timeDesc: Int, viewClass: V
     init { setDesc() }
 
     @UiThread
-    fun set(flag: String) =_beforeBelowAboveAfterView.set(flag)
-    @UiThread
-    fun clear() =_beforeBelowAboveAfterView.clear()
+    fun clear() = _beforeBelowAboveAfter.clear()
     @UiThread
     fun redrawTexts() {
-        _beforeBelowAboveAfterView.redrawTexts()
+        _beforeBelowAboveAfter.redrawTexts()
         setDesc()
     }
     @UiThread
-    fun flag() = _beforeBelowAboveAfterView.flag()
+    fun set(flag: String) = _beforeBelowAboveAfter.set(flag)
+
+    @UiThread
+    fun flag() = _beforeBelowAboveAfter.flag()
 
     @UiThread
     private fun setDesc() = _textTimeDesc.setText(_timeDesc)

@@ -7,7 +7,8 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
-import com.doublex.selfmanagementhelper.views.ActivityLogs
+import com.doublex.selfmanagementhelper.views.ActivityLogViews
+import com.doublex.selfmanagementhelper.views.DefinedActivityView
 import com.doublex.selfmanagementhelper.views.DefinedActivityViews
 import com.doublex.selfmanagementhelper.views.NewActivityView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,33 +18,37 @@ import java.util.*
 
 internal class MainActivity : AppCompatActivity() {
 
-    private val _newActivityView by lazy { NewActivityView(this, linear_define_activity) }
+    private val _newActivity by lazy { NewActivityView(this, linear_define_activity) }
+
     private val _res by lazy { resources }
     private val _config by lazy { _res.configuration }
+
     private val _sharedPreferences by lazy { getSharedPreferences(packageName, 0) }
     private val _cache by lazy { Cache(_sharedPreferences) }
-    private val _definedActivityViews by lazy { DefinedActivityViews(_cache, linear_activities) }
+    private val _definedActivities by lazy { DefinedActivityViews(_cache, linear_activities) }
+
     private val _definedActivityCallbacks = object : DefinedActivity {
-        override fun onDelete(name: String) {
-            _definedActivityViews.delete(name, this@MainActivity, this)
+        override fun onDelete(definedActivityView: DefinedActivityView) {
+            _definedActivities.delete(definedActivityView)
         }
         override fun onRename(newName: String, details: JSONObject, oldName: String) {
-            _definedActivityViews.rename(newName, details, oldName)
+            _cache.renameActivity(newName, details, oldName)
         }
         override fun onSave(name: String, details: JSONObject) {
-            _definedActivityViews.save(name, details)
+            _cache.saveActivity(name, details)
         }
         override fun onSaveAs(name: String, details: JSONObject) {
-            _definedActivityViews.saveAs(name, details, this@MainActivity, this)
+            _definedActivities.saveAs(name, details, this@MainActivity, this)
         }
         override fun onStart(name: String, details: JSONObject, notification: String) {
             _activityLogs.start(this@MainActivity, name, details)
             _notification.show(notification)
         }
     }
+
     private val _notification by lazy { NotificationBuilder(this) }
     private val _activityLogs by lazy {
-        ActivityLogs(_cache, _notification, linear_activity_logs)
+        ActivityLogViews(_cache, _notification, linear_activity_logs)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +73,10 @@ internal class MainActivity : AppCompatActivity() {
         setLangChoices()
         setListeners()
         changeLang(_cache.lang())
+        // Calling them before changeLang would cause duplicated text renderings
+        _definedActivities.update(this, _definedActivityCallbacks)
+        _activityLogs.update(this)
+        //
     }
 
     @UiThread
@@ -104,7 +113,7 @@ internal class MainActivity : AppCompatActivity() {
         setTitle(R.string.app_name)
         button_clear_all_data.setText(R.string.clear_all_data)
         button_define_activity.setText(R.string.define_activity)
-        _newActivityView.redrawTexts()
+        _newActivity.redrawTexts()
         button_clear_define_activity.setText(R.string.clear)
         button_confirm_define_activity.setText(R.string.confirm)
         // Preserves the visibility state while still redrawing the button texts
@@ -113,15 +122,18 @@ internal class MainActivity : AppCompatActivity() {
         toggleActivityLogVisibilities()
         toggleActivityLogVisibilities()
         //
-        _definedActivityViews.update(this, _definedActivityCallbacks)
-        _activityLogs.update(this)
+        //
+        // Simplifies the codes at the cost of redundant calls upon activity start
+        _definedActivities.redrawTexts()
+        _activityLogs.redrawTexts()
+        //
     }
 
     @UiThread
     private fun setListeners() {
         button_clear_all_data.setOnClickListener { onClearAllData() }
         button_define_activity.setOnClickListener { toggleNewActivityVisibility() }
-        button_clear_define_activity.setOnClickListener { _newActivityView.clear() }
+        button_clear_define_activity.setOnClickListener { _newActivity.clear() }
         button_confirm_define_activity.setOnClickListener { onDefineActivity() }
         button_activities.setOnClickListener { toggleActivityVisibilities() }
         button_activity_logs.setOnClickListener { toggleActivityLogVisibilities() }
@@ -145,8 +157,8 @@ internal class MainActivity : AppCompatActivity() {
 
     @UiThread
     private fun onDefineActivity() {
-        if (_newActivityView.name().isEmpty()) return onEmptyNewActivityName()
-        _definedActivityViews.add(_newActivityView, this, _definedActivityCallbacks)
+        if (_newActivity.name().isEmpty()) return onEmptyNewActivityName()
+        _definedActivities.add(_newActivity, this, _definedActivityCallbacks)
     }
     // It's just accidentally the same as onEmptyEditText in DialogBuilder
     @UiThread

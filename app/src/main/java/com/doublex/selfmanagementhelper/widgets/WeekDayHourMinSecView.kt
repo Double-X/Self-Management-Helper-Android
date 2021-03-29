@@ -19,12 +19,6 @@ internal class WeekDayHourMinSecView(context: Context, view: View) : HourMinSecV
     private val _textDays = textView(R.id.text_days)
 
     @UiThread
-    override fun set(time: JSONObject) {
-        super.set(time)
-        _editTextWeek.setText(time.getString(WEEKS))
-        setSpinner(_spinnerDays, time.getString(DAYS))
-    }
-    @UiThread
     override fun clear() {
         super.clear()
         _editTextWeek.setText("")
@@ -37,11 +31,19 @@ internal class WeekDayHourMinSecView(context: Context, view: View) : HourMinSecV
         _textDays.setText(R.string.days)
     }
     @UiThread
+    override fun set(times: JSONObject) {
+        super.set(times)
+        _editTextWeek.setText(time(times, WEEKS))
+        setSpinner(_spinnerDays, time(times, DAYS))
+    }
+
+    @UiThread
     override fun times(): JSONObject {
-        val jsonObject = super.times()
-        jsonObject.put(DAYS, time(_spinnerDays))
-        jsonObject.put(WEEKS, _editTextWeek.text.toString())
-        return jsonObject
+        val times = super.times()
+        putString(times, DAYS, _spinnerDays)
+        val weeks = _editTextWeek.text.toString()
+        if (weeks.isNotEmpty()) times.put(WEEKS, weeks) // Minimizes the size of the data stored
+        return times
     }
 
 }

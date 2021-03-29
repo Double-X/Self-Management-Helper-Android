@@ -12,8 +12,8 @@ import androidx.core.app.NotificationCompat
 
 internal class NotificationBuilder(private val _context: Context) {
 
-    private val _channelId = BuildConfig.APPLICATION_ID
     private val _appName = _context.resources.getString(R.string.app_name)
+    private val _channelId = BuildConfig.APPLICATION_ID
     private val _manager = _context.getSystemService(
         Context.NOTIFICATION_SERVICE
     ) as NotificationManager

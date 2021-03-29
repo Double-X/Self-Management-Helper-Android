@@ -18,7 +18,6 @@ import com.doublex.selfmanagementhelper.views.NewActivityView.Companion.TARGETED
 import org.json.JSONObject
 import java.util.*
 
-
 internal class ActivityLogView(
     private val _name: String,
     private val _startTime: String,
@@ -29,47 +28,48 @@ internal class ActivityLogView(
 ) {
 
     companion object {
+
         fun now() = Calendar.getInstance().time.time
+
         private const val ACTUAL_END_TIME = "Actual End Time"
         private const val ACTUAL_DURATION = "Actual Duration"
         private const val ACTUAL_INTENSITY = "Actual Intensity"
+
     }
 
     private val _view = View.inflate(context, R.layout.widget_activity_log, null)
-    private val _deleteButton = view<Button>(R.id.button_delete_activity_log)
-    private val _endButton = view<Button>(R.id.button_end_activity)
-    private val _actualEndTime = textView(R.id.text_activity_actual_end_time)
-    private val _actualIntensity = textView(R.id.text_activity_actual_intensity)
+
+    private val _buttonDelete = view<Button>(R.id.button_delete_activity_log)
+    private val _buttonEnd = view<Button>(R.id.button_end_activity)
+
+    private val _textName = textView(R.id.text_activity_name)
+    private val _textDesc = textView(R.id.text_activity_desc)
+
+    private val _textTargetedStartTime = textView(R.id.text_activity_targeted_start_time)
+    private val _textActualStartTime = textView(R.id.text_activity_actual_start_time)
+    private val _textStartNotification = textView(R.id.text_activity_start_notification)
+
+    private val _textTargetedEndTime = textView(R.id.text_activity_targeted_end_time)
+    private val _textActualEndTime = textView(R.id.text_activity_targeted_end_time)
+    private val _textEndNotification = textView(R.id.text_activity_end_notification)
+
+    private val _textTargetedDuration = textView(R.id.text_activity_targeted_duration)
+    private val _textActualDuration = textView(R.id.text_activity_actual_duration)
+
+    private val _textTargetedIntensity = textView(R.id.text_activity_targeted_intensity)
+    private val _textActualIntensity = textView(R.id.text_activity_actual_intensity)
 
     init {
-        _deleteButton.setOnClickListener {
+        _buttonDelete.setOnClickListener {
             showConfirmDialog(context, R.string.on_delete_activity_log) { deleteCallback(this) }
         }
-        _endButton.setOnClickListener {
+        _buttonEnd.setOnClickListener {
             showEditTextDialog(context, R.string.end, R.string.activity_actual_intensity) {
-                _endButton.visibility = View.GONE
-                setText(_actualIntensity, it)
-                _details.put(ACTUAL_INTENSITY, it)
-                val endTime = now()
-                _details.put(ACTUAL_END_TIME, endTime)
-                _details.put(ACTUAL_DURATION, endTime - _startTime.toLong())
-                setText(_actualEndTime, endTime.toString())
-                endCallback(this)
+                onEnd(it, endCallback)
             }
         }
-        _endButton.visibility = if (_details.has(ACTUAL_END_TIME)) View.GONE else View.VISIBLE
-        setText(R.id.text_activity_name, _name)
-        setText(R.id.text_activity_desc, text(DESC))
-        setText(R.id.text_activity_targeted_start_time, text(TARGETED_START_TIME))
-        setText(R.id.text_activity_actual_start_time, _startTime)
-        setText(R.id.text_activity_start_notification, text(START_NOTIFICATION))
-        setText(R.id.text_activity_targeted_end_time, text(TARGETED_END_TIME))
-        setText(_actualEndTime, text(ACTUAL_END_TIME))
-        setText(R.id.text_activity_end_notification, text(END_NOTIFICATION))
-        setText(R.id.text_activity_targeted_duration, text(TARGETED_DURATION))
-        setText(R.id.text_activity_actual_duration, text(ACTUAL_DURATION))
-        setText(R.id.text_activity_targeted_intensity, text(TARGETED_INTENSITY))
-        setText(_actualIntensity, text(ACTUAL_INTENSITY))
+        _buttonEnd.visibility = if (_details.has(ACTUAL_END_TIME)) View.GONE else View.VISIBLE
+        redrawTexts()
     }
 
     fun name() = _name
@@ -78,8 +78,32 @@ internal class ActivityLogView(
     fun endNotification(): String = _details.getString(END_NOTIFICATION)
     fun view(): View = _view
 
+    fun redrawTexts() {
+        _textName.text = _name
+        setText(_textDesc, text(DESC))
+        setText(_textTargetedStartTime, text(TARGETED_START_TIME))
+        _textActualStartTime.text = _startTime
+        setText(_textStartNotification, text(START_NOTIFICATION))
+        setText(_textTargetedEndTime, text(TARGETED_END_TIME))
+        setText(_textActualEndTime, text(ACTUAL_END_TIME))
+        setText(_textEndNotification, text(END_NOTIFICATION))
+        setText(_textTargetedDuration, text(TARGETED_DURATION))
+        setText(_textActualDuration, text(ACTUAL_DURATION))
+        setText(_textTargetedIntensity, text(TARGETED_INTENSITY))
+        setText(_textActualIntensity, text(ACTUAL_INTENSITY))
+    }
+
     @UiThread
-    private fun setText(id: Int, text: String) = setText(textView(id), text)
+    private fun onEnd(actualIntensity: String, endCallback: (ActivityLogView) -> Unit) {
+        _buttonEnd.visibility = View.GONE
+        setText(_textActualIntensity, actualIntensity)
+        _details.put(ACTUAL_INTENSITY, actualIntensity)
+        val endTime = now()
+        _details.put(ACTUAL_END_TIME, endTime)
+        _details.put(ACTUAL_DURATION, endTime - _startTime.toLong())
+        setText(_textActualEndTime, endTime.toString())
+        endCallback(this)
+    }
     @UiThread
     private fun setText(textView: TextView, text: String) {
         textView.text = text
