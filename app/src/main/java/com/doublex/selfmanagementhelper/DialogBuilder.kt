@@ -14,15 +14,8 @@ internal fun showActivityNameDialog(
     hintR: Int,
     onConfirm: (text: String) -> Unit
 ) {
-    val editText = editText(context, hintR)
     val inputMethodManager = shownInputMethodManager(context)
-    val builder = baseDialogBuilder(context, {
-        val text = editText.text.toString()
-        if (text.isEmpty()) onEmptyEditText(context) else onConfirm(text)
-    }) { hideSoftInput(inputMethodManager) }
-    builder.setTitle(titleR)
-    builder.setView(editText)
-    builder.show()
+    activityNameDialogBuilder(context, titleR, hintR, onConfirm, inputMethodManager).show()
 }
 @UiThread
 internal fun showEditTextDialog(
@@ -31,14 +24,8 @@ internal fun showEditTextDialog(
     hintR: Int,
     onConfirm: (text: String) -> Unit
 ) {
-    val editText = editText(context, hintR)
     val inputMethodManager = shownInputMethodManager(context)
-    val builder = baseDialogBuilder(context, { onConfirm(editText.text.toString()) }) {
-        hideSoftInput(inputMethodManager)
-    }
-    builder.setTitle(titleR)
-    builder.setView(editText)
-    builder.show()
+    editTextDialogBuilder(context, titleR, hintR, onConfirm, inputMethodManager).show()
 }
 
 @UiThread
@@ -47,18 +34,54 @@ internal fun showConfirmDialog(context: Context, msgR: Int, onConfirm: () -> Uni
 }
 @UiThread
 internal fun showConfirmDialog(context: Context, msg: String, onConfirm: () -> Unit) {
-    val builder = baseDialogBuilder(context, onConfirm) {}
-    builder.setMessage(msg)
-    builder.show()
+    confirmDialogBuilder(context, msg, onConfirm).show()
 }
 
-@UiThread
+private fun activityNameDialogBuilder(
+    context: Context,
+    titleR: Int,
+    hintR: Int,
+    onConfirm: (text: String) -> Unit,
+    inputMethodManager: InputMethodManager
+): AlertDialog.Builder {
+    val editText = editText(context, hintR)
+    val builder = baseDialogBuilder(context, {
+        val text = editText.text.toString()
+        if (text.isEmpty()) onEmptyEditText(context) else onConfirm(text)
+    }) { hideSoftInput(inputMethodManager) }
+    builder.setTitle(titleR)
+    builder.setView(editText)
+    return builder
+}
+private fun editTextDialogBuilder(
+    context: Context,
+    titleR: Int,
+    hintR: Int,
+    onConfirm: (text: String) -> Unit,
+    inputMethodManager: InputMethodManager
+): AlertDialog.Builder {
+    val editText = editText(context, hintR)
+    val builder = baseDialogBuilder(context, { onConfirm(editText.text.toString()) }) {
+        hideSoftInput(inputMethodManager)
+    }
+    builder.setTitle(titleR)
+    builder.setView(editText)
+    return builder
+}
 private fun editText(context: Context, hintR: Int): EditText {
     val editText = EditText(context)
     editText.setHint(hintR)
     return editText
 }
-@UiThread
+private fun confirmDialogBuilder(
+    context: Context,
+    msg: String,
+    onConfirm: () -> Unit
+): AlertDialog.Builder {
+    val builder = baseDialogBuilder(context, onConfirm) {}
+    builder.setMessage(msg)
+    return builder
+}
 private fun baseDialogBuilder(
     context: Context,
     onConfirm: () -> Unit,
@@ -76,13 +99,13 @@ private fun baseDialogBuilder(
     }
     return builder
 }
+
 @UiThread
 private fun shownInputMethodManager(context: Context): InputMethodManager {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     return imm
 }
-
 @UiThread
 private fun hideSoftInput(inputMethodManager: InputMethodManager) {
     inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)

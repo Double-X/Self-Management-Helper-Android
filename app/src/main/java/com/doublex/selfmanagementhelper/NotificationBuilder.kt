@@ -20,7 +20,9 @@ internal class NotificationBuilder(private val _context: Context) {
     private val _sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
     @UiThread
-    fun show(notification: String) {
+    fun show(notification: String) = _manager.notify(0, notification(notification))
+
+    private fun notification(notification: String): Notification {
         val builder = NotificationCompat.Builder(_context, BuildConfig.APPLICATION_ID)
         builder.priority = NotificationCompat.PRIORITY_MAX
         builder.setContentText(notification)
@@ -31,10 +33,9 @@ internal class NotificationBuilder(private val _context: Context) {
         builder.setSound(_sound)
         builder.setStyle(NotificationCompat.BigTextStyle().bigText(notification))
         showOnOreoPlus(builder)
-        _manager.notify(0, builder.build())
+        return builder.build()
     }
 
-    @UiThread
     private fun showOnOreoPlus(builder: NotificationCompat.Builder) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         builder.setChannelId(_channelId)

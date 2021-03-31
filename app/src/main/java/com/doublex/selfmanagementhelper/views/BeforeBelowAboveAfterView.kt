@@ -1,4 +1,4 @@
-package com.doublex.selfmanagementhelper.widgets
+package com.doublex.selfmanagementhelper.views
 
 import android.view.View
 import androidx.annotation.UiThread
@@ -7,7 +7,7 @@ import com.google.android.material.chip.ChipGroup
 
 internal abstract class BeforeBelowAboveAfterView(private val _view: View) {
 
-    private enum class Flag(val flag: String) {
+    enum class Flag(val flag: String) {
         AFTER_ABOVE("After Above"),
         BEFORE_BELOW("Before Below")
     }

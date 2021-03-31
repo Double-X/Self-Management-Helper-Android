@@ -1,4 +1,4 @@
-package com.doublex.selfmanagementhelper.widgets
+package com.doublex.selfmanagementhelper.views
 
 import android.content.Context
 import android.view.View
@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 internal open class HourMinSecView(private val _context: Context, private val _view: View) {
 
-    protected companion object {
+    companion object {
         const val HOURS = "Hours"
         const val MINUTES = "Minutes"
         const val SECS = "Secs"
@@ -46,7 +46,6 @@ internal open class HourMinSecView(private val _context: Context, private val _v
         setSpinner(_spinnerSecs, time(times, SECS))
     }
 
-    @UiThread
     open fun times(): JSONObject {
         val times = JSONObject()
         putString(times, HOURS, _spinnerHours)
@@ -66,16 +65,16 @@ internal open class HourMinSecView(private val _context: Context, private val _v
         spinner.setSelection(0)
         spinner.isSelected = false
     }
-    @UiThread
+
     protected fun putString(times: JSONObject, key: String, spinner: Spinner) {
         val time = time(spinner)
         if (time.isNotEmpty()) times.put(key, time) // Minimizes the size of the data stored
     }
 
-    @UiThread
     protected fun time(times: JSONObject, key: String): String {
         return if (times.has(key)) times.getString(key) else ""
     }
+
     @UiThread
     protected fun time(spinner: Spinner) = spinner.selectedItem?.toString() ?: ""
     @UiThread

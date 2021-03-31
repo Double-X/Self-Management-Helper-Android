@@ -1,4 +1,4 @@
-package com.doublex.selfmanagementhelper.widgets
+package com.doublex.selfmanagementhelper.views
 
 import android.content.Context
 import android.view.View
@@ -37,7 +37,6 @@ internal class WeekDayHourMinSecView(context: Context, view: View) : HourMinSecV
         setSpinner(_spinnerDays, time(times, DAYS))
     }
 
-    @UiThread
     override fun times(): JSONObject {
         val times = super.times()
         putString(times, DAYS, _spinnerDays)

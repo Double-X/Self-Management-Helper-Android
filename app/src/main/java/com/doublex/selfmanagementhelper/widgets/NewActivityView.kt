@@ -1,14 +1,14 @@
-package com.doublex.selfmanagementhelper.views
+package com.doublex.selfmanagementhelper.widgets
 
 import android.content.Context
 import android.view.View
 import android.widget.EditText
 import androidx.annotation.UiThread
 import com.doublex.selfmanagementhelper.R
-import com.doublex.selfmanagementhelper.widgets.BelowAboveView
-import com.doublex.selfmanagementhelper.widgets.HourMinSecView
-import com.doublex.selfmanagementhelper.widgets.TimeDescView
-import com.doublex.selfmanagementhelper.widgets.WeekDayHourMinSecView
+import com.doublex.selfmanagementhelper.views.BelowAboveView
+import com.doublex.selfmanagementhelper.views.HourMinSecView
+import com.doublex.selfmanagementhelper.views.TimeDescView
+import com.doublex.selfmanagementhelper.views.WeekDayHourMinSecView
 import org.json.JSONObject
 
 internal class NewActivityView(context: Context, private val _view: View) {
@@ -44,23 +44,23 @@ internal class NewActivityView(context: Context, private val _view: View) {
 
     private val _startBeforeAfter = TimeDescView(
         view(R.id.view_before_after_start),
-        R.string.activity_target_start_time,
+        R.string.activity_targeted_start_time,
         TimeDescView.ViewClass.BeforeAfter
     )
     private val _endBeforeAfter = TimeDescView(
         view(R.id.view_before_after_end),
-        R.string.activity_target_end_time,
+        R.string.activity_targeted_end_time,
         TimeDescView.ViewClass.BeforeAfter
     )
     private val _durationAboveBelow = TimeDescView(
         view(R.id.view_duration_below_above),
-        R.string.activity_target_duration,
+        R.string.activity_targeted_duration,
         TimeDescView.ViewClass.BelowAbove
     )
     private val _intensityAboveBelow = BelowAboveView(view(R.id.view_intensity_below_above))
     private val _intervalAboveBelow = TimeDescView(
         view(R.id.view_interval_below_above),
-        R.string.activity_target_interval,
+        R.string.activity_targeted_interval,
         TimeDescView.ViewClass.BelowAbove
     )
 
@@ -84,8 +84,8 @@ internal class NewActivityView(context: Context, private val _view: View) {
 
     @UiThread
     fun clear() {
+        clearChips()
         clearEditTexts()
-        clearRadioButtons()
         clearTimes()
     }
     @UiThread
@@ -101,8 +101,8 @@ internal class NewActivityView(context: Context, private val _view: View) {
     }
     @UiThread
     fun setDetails(details: JSONObject) {
+        setChips(details)
         setEditTexts(details)
-        setRadioButtons(details)
         setTimes(details)
     }
 
@@ -121,6 +121,14 @@ internal class NewActivityView(context: Context, private val _view: View) {
     fun endNotification() = viewString(_end)
 
     @UiThread
+    private fun clearChips() {
+        _startBeforeAfter.clear()
+        _endBeforeAfter.clear()
+        _durationAboveBelow.clear()
+        _intensityAboveBelow.clear()
+        _intervalAboveBelow.clear()
+    }
+    @UiThread
     private fun clearEditTexts() {
         clearEditText(_name)
         clearEditText(_desc)
@@ -130,14 +138,6 @@ internal class NewActivityView(context: Context, private val _view: View) {
     }
     @UiThread
     private fun clearEditText(editText: EditText) = editText.setText("")
-    @UiThread
-    private fun clearRadioButtons() {
-        _startBeforeAfter.clear()
-        _endBeforeAfter.clear()
-        _durationAboveBelow.clear()
-        _intensityAboveBelow.clear()
-        _intervalAboveBelow.clear()
-    }
     @UiThread
     fun clearTimes() {
         _startHourMinSec.clear()
@@ -152,7 +152,7 @@ internal class NewActivityView(context: Context, private val _view: View) {
         _desc.setHint(R.string.activity_desc)
         _start.setHint(R.string.activity_start_notification)
         _end.setHint(R.string.activity_end_notification)
-        _intensity.setHint(R.string.activity_target_intensity)
+        _intensity.setHint(R.string.activity_targeted_intensity)
     }
     @UiThread
     private fun redrawRadioButtonTexts() {
@@ -171,19 +171,19 @@ internal class NewActivityView(context: Context, private val _view: View) {
     }
 
     @UiThread
-    private fun setEditTexts(details: JSONObject) {
-        _desc.setText(string(details, DESC))
-        _start.setText(string(details, START_NOTIFICATION))
-        _end.setText(string(details, END_NOTIFICATION))
-        _intensity.setText(string(details, TARGETED_INTENSITY))
-    }
-    @UiThread
-    private fun setRadioButtons(details: JSONObject) {
+    private fun setChips(details: JSONObject) {
         _startBeforeAfter.set(string(details, START_TIME_FLAG))
         _endBeforeAfter.set(string(details, END_TIME_FLAG))
         _durationAboveBelow.set(string(details, DURATION_FLAG))
         _intensityAboveBelow.set(string(details, INTENSITY_FLAG))
         _intervalAboveBelow.set(string(details, INTERVAL_FLAG))
+    }
+    @UiThread
+    private fun setEditTexts(details: JSONObject) {
+        _desc.setText(string(details, DESC))
+        _start.setText(string(details, START_NOTIFICATION))
+        _end.setText(string(details, END_NOTIFICATION))
+        _intensity.setText(string(details, TARGETED_INTENSITY))
     }
     private fun string(details: JSONObject, key: String): String {
         return if (details.has(key)) details.getString(key) else ""
@@ -208,7 +208,6 @@ internal class NewActivityView(context: Context, private val _view: View) {
         putJSONObject(details, TARGETED_DURATION, _durationHourMinSec.times())
         putJSONObject(details, TARGETED_INTERVAL, _intervalWeekDayHourMinSec.times())
     }
-    @UiThread
     private fun putJSONObject(details: JSONObject, key: String, jsonObject: JSONObject) {
         // Minimizes the size of the data stored
         if (jsonObject.length() > 0) details.put(key, jsonObject)
@@ -226,7 +225,6 @@ internal class NewActivityView(context: Context, private val _view: View) {
         putString(INTENSITY_FLAG, details, _intensityAboveBelow.flag())
         putString(INTERVAL_FLAG, details, _intervalAboveBelow.flag())
     }
-    @UiThread
     private fun putString(key: String, details: JSONObject, string: String) {
         if (string.isNotEmpty()) details.put(key, string) // Minimizes the size of the data stored
     }

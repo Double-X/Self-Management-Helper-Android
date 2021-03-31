@@ -1,11 +1,11 @@
-package com.doublex.selfmanagementhelper.views
+package com.doublex.selfmanagementhelper.widgets
 
 import android.content.Context
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.UiThread
-import com.doublex.selfmanagementhelper.DefinedActivity
+import com.doublex.selfmanagementhelper.DefinedActivityCallbacks
 import com.doublex.selfmanagementhelper.R
 import com.doublex.selfmanagementhelper.showConfirmDialog
 import com.doublex.selfmanagementhelper.showActivityNameDialog
@@ -15,7 +15,7 @@ internal class DefinedActivityView(
     details: JSONObject,
     private val _name: String,
     private val _context: Context,
-    private val _callbacks: DefinedActivity
+    private val _callbacks: DefinedActivityCallbacks
 ) {
 
     private val _view: View = View.inflate(_context, R.layout.widget_defined_activity, null)

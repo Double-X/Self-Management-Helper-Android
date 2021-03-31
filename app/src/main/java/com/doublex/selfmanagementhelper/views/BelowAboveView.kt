@@ -1,4 +1,4 @@
-package com.doublex.selfmanagementhelper.widgets
+package com.doublex.selfmanagementhelper.views
 
 import android.view.View
 import com.doublex.selfmanagementhelper.R

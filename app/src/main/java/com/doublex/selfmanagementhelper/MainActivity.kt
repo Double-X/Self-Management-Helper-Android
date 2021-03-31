@@ -7,10 +7,10 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
-import com.doublex.selfmanagementhelper.views.ActivityLogViews
-import com.doublex.selfmanagementhelper.views.DefinedActivityView
-import com.doublex.selfmanagementhelper.views.DefinedActivityViews
-import com.doublex.selfmanagementhelper.views.NewActivityView
+import com.doublex.selfmanagementhelper.widgets.ActivityLogViews
+import com.doublex.selfmanagementhelper.widgets.DefinedActivityView
+import com.doublex.selfmanagementhelper.widgets.DefinedActivityViews
+import com.doublex.selfmanagementhelper.widgets.NewActivityView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.util.*
@@ -27,7 +27,7 @@ internal class MainActivity : AppCompatActivity() {
     private val _cache by lazy { Cache(_sharedPreferences) }
     private val _definedActivities by lazy { DefinedActivityViews(_cache, linear_activities) }
 
-    private val _definedActivityCallbacks = object : DefinedActivity {
+    private val _definedActivityCallbacks = object : DefinedActivityCallbacks {
         override fun onDelete(definedActivityView: DefinedActivityView) {
             _definedActivities.delete(definedActivityView)
         }

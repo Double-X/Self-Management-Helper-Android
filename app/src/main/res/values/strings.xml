@@ -53,11 +53,15 @@
     <string name="activity_name">&activity; Name</string>
     <string name="activity_end_notification">&notification; On &activity; &end;</string>
     <string name="activity_start_notification">&notification; On &activity; &start;</string>
-    <string name="activity_target_duration">&targeted; &activity; &duration;</string>
-    <string name="activity_target_end_time">&targeted; &activity; &end; &time;</string>
-    <string name="activity_target_start_time">&targeted; &activity; &start; &time;</string>
-    <string name="activity_target_intensity">&targeted; &activity; &intensity;</string>
-    <string name="activity_target_interval">&targeted; &activity; &interval;</string>
+    <string name="activity_targeted_duration">&targeted; &activity; &duration;</string>
+    <string name="activity_targeted_end_time">&targeted; &activity; &end; &time;</string>
+    <string name="activity_targeted_start_time">&targeted; &activity; &start; &time;</string>
+    <string name="activity_targeted_intensity">&targeted; &activity; &intensity;</string>
+    <string name="activity_targeted_interval">&targeted; &activity; &interval;</string>
+
+    <string name="activity_actual_duration">&actual; &activity; &duration;</string>
+    <string name="activity_actual_end_time">&actual; &activity; &end; &time;</string>
+    <string name="activity_actual_start_time">&actual; &activity; &start; &time;</string>
     <string name="activity_actual_intensity">&actual; &activity; &intensity;</string>
 
     <string name="delete">&delete;</string>
@@ -67,8 +71,11 @@
 
     <string name="on_clear_all_data">&confirm; &clear; &all_data;\?</string>
     <string name="on_delete_activity">&confirm; &delete; &activity; \"%1$s\"?</string>
-    <string name="on_delete_activity_log">&confirm; &delete; &activity_logs; \"%1$s\"?</string>
+    <string name="on_delete_activity_log">&confirm; &delete; this &activity_logs;\?</string>
     <string name="on_empty_edit_text">%1$s can\'t be empty!</string>
+
+    <string name="date_format">yyyy/MMM/dd HH:mm:ss</string>
+    <string name="time_separator">&#160;</string>
 
     <string name="days">Days</string>
     <string name="hours">Hours</string>

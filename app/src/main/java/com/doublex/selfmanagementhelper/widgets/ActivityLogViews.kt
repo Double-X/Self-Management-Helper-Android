@@ -1,11 +1,11 @@
-package com.doublex.selfmanagementhelper.views
+package com.doublex.selfmanagementhelper.widgets
 
 import android.content.Context
 import android.widget.LinearLayout
 import androidx.annotation.UiThread
 import com.doublex.selfmanagementhelper.Cache
 import com.doublex.selfmanagementhelper.NotificationBuilder
-import com.doublex.selfmanagementhelper.views.ActivityLogView.Companion.now
+import com.doublex.selfmanagementhelper.widgets.ActivityLogView.Companion.now
 import org.json.JSONObject
 import java.util.*
 
@@ -40,7 +40,7 @@ internal class ActivityLogViews(
 
     @UiThread
     private fun add(context: Context, name: String, startTime: String, details: JSONObject) {
-        val log = ActivityLogView(name, startTime, details, context, { delete(it) }) { end(it) }
+        val log = ActivityLogView(context, name, startTime, details, { delete(it) }) { end(it) }
         _logs.add(log)
         _views.addView(log.view())
     }

@@ -115,7 +115,7 @@
                     android:autofillHints=""
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="@string/activity_target_intensity"
+                    android:hint="@string/activity_targeted_intensity"
                     android:inputType="textPersonName" />
 
             </LinearLayout>
